@@ -1,14 +1,18 @@
 import React, {Component} from 'react';
 import './App.css'
 import Que from './Que';
-import {RegistryOfCapTablesQue} from "@brreg/sdk";
+import {RegistryOfCapTablesQue, RegistryOfCapTables, StockFactory, EntityRegistry} from "@brreg/sdk";
+import {Stiftelse} from "./Stiftelse";
+import {Route, BrowserRouter as Router} from "react-router-dom";
 
 class App extends Component {
 
   state = {
     error: false,
     initializing: true,
-    capTableQue: undefined
+    capTableQue: undefined,
+    capTable: undefined,
+    stockFactory: undefined
   };
 
   async componentDidMount() {
@@ -16,10 +20,16 @@ class App extends Component {
 
     if (ethereum && web3) {
       const capTableQue = await RegistryOfCapTablesQue.init(ethereum);
+      const capTables = await RegistryOfCapTables.init(ethereum);
+      const stockFactory = await StockFactory.init(ethereum);
+      const entityRegistry = await EntityRegistry.init(ethereum);
 
       this.setState({
         ...this.state,
         capTableQue,
+        capTables,
+        stockFactory,
+        entityRegistry,
         initializing: false
       });
     } else {
@@ -32,7 +42,7 @@ class App extends Component {
   }
 
   render() {
-    const {error, capTableQue, initializing} = this.state;
+    const {error, capTableQue, capTables, entityRegistry, stockFactory, initializing} = this.state;
 
     if (error) {
       return <div>Error while initializing</div>
@@ -44,7 +54,13 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Que capTableQue={capTableQue}></Que>
+        <Router>
+          <Route path="/" exact component={() => <div>Nothing here</div>}/>
+          <Route path="/que" component={() => <Que capTableQue={capTableQue}/>}/>
+          <Route path="/stiftelse" component={() => <Stiftelse capTables={capTables}
+                                                               stockFactory={stockFactory}
+                                                               entityRegistry={entityRegistry}/>}/>
+        </Router>
       </div>
     );
   }
