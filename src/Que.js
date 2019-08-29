@@ -1,9 +1,22 @@
 import React, {Component} from 'react';
-import {EntityRegistry, RegistryOfCapTablesQue} from "@brreg/sdk";
+import {RegistryOfCapTablesQue} from "@brreg/sdk";
 import './Que.css';
+import {Card} from "@material-ui/core";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import {Entity} from "./Entity";
 
 const getEntity = async (orgnummer) => {
     return fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${orgnummer}`)
+        .then(response => {
+            if (response.status !== 200) {
+                throw new Error('Entity not found');
+            }
+
+            return response;
+        })
         .then(response => response.json())
         .catch((e) => {
             console.error(e);
@@ -52,15 +65,40 @@ class Que extends Component {
         }
 
         return (
-            <div className="App">
-                {
-                    que.map((entry, i) => (
-                        <div class="que">
-                            <pre key={`que-${i}`}>{JSON.stringify(entry, null, 4)}</pre>
-                            <pre key={`enhet-${i}`}>{JSON.stringify(entities[i])}</pre>
-                        </div>
-                    ))
-                }
+            <div>
+                <h1>Kø for Aksjeeierbøker</h1>
+
+                <div className="que">
+                    {
+                        que.map((capTable, i) => {
+                            const entity = entities[i];
+                            const navn = entity ? entity.navn : 'Ukjent enhet';
+
+                            console.log(capTable);
+
+                            return (
+                                <div key={i} className="que__entry">
+                                    <Card>
+                                        <CardHeader title={navn}></CardHeader>
+                                        <CardContent>
+                                            {
+                                                entity
+                                                    ? (
+                                                        <Entity entity={entity} capTable={capTable}/>
+                                                    )
+                                                    : ('')
+                                            }
+                                        </CardContent>
+                                        <CardActions>
+                                            <Button variant="contained" color="secondary">Avslå</Button>
+                                            <Button variant="contained" color="primary">Godkjenn</Button>
+                                        </CardActions>
+                                    </Card>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
             </div>
         );
     }
