@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import request from 'request-promise';
 import {EntityRegistry, RegistryOfCapTablesQue} from "@brreg/sdk";
+import './Que.css';
 
 const getEntity = async (orgnummer) => {
-   return request(`https://data.brreg.no/enhetsregisteret/api/enheter/${orgnummer}`)
-       .catch(() => Promise.resolve(null));
+    return fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${orgnummer}`)
+        .then(response => response.json())
+        .catch((e) => {
+            console.error(e);
+            return Promise.resolve(null);
+        });
 };
 
 class Que extends Component {
@@ -41,7 +45,7 @@ class Que extends Component {
     }
 
     render() {
-        const {que, error} = this.state;
+        const {que, error, entities} = this.state;
 
         if (error) {
             return <div>Error</div>
@@ -50,7 +54,12 @@ class Que extends Component {
         return (
             <div className="App">
                 {
-                    que.map((entry, i) => <pre key={i}>{JSON.stringify(entry, null, 4)}</pre>)
+                    que.map((entry, i) => (
+                        <div class="que">
+                            <pre key={`que-${i}`}>{JSON.stringify(entry, null, 4)}</pre>
+                            <pre key={`enhet-${i}`}>{JSON.stringify(entities[i])}</pre>
+                        </div>
+                    ))
                 }
             </div>
         );
