@@ -53,7 +53,7 @@ class Que extends Component {
             this.setState({
                 ...this.state,
                 error: true,
-            })
+            });
         }
     }
 
@@ -72,21 +72,18 @@ class Que extends Component {
                     {
                         que.map((capTable, i) => {
                             const entity = entities[i];
-                            const navn = entity ? entity.navn : 'Ukjent enhet';
-
-                            console.log(capTable);
 
                             return (
                                 <div key={i} className="que__entry">
                                     <Card>
-                                        <CardHeader title={navn}></CardHeader>
+                                        <CardHeader title={capTable.name}></CardHeader>
                                         <CardContent>
                                             {
                                                 entity
                                                     ? (
                                                         <Entity entity={entity} capTable={capTable}/>
                                                     )
-                                                    : ('')
+                                                    : ('Kunne ikke finne enhet i enhetsregisteret')
                                             }
                                         </CardContent>
                                         <CardActions>
