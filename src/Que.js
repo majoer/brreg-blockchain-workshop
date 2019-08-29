@@ -9,96 +9,96 @@ import Button from "@material-ui/core/Button";
 import {Entity} from "./Entity";
 
 const getEntity = async (orgnummer) => {
-    return fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${orgnummer}`)
-        .then(response => {
-            if (response.status !== 200) {
-                throw new Error('Entity not found');
-            }
+  return fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${orgnummer}`)
+    .then(response => {
+      if (response.status !== 200) {
+        throw new Error('Entity not found');
+      }
 
-            return response;
-        })
-        .then(response => response.json())
-        .catch((e) => {
-            console.error(e);
-            return Promise.resolve(null);
-        });
+      return response;
+    })
+    .then(response => response.json())
+    .catch((e) => {
+      console.error(e);
+      return Promise.resolve(null);
+    });
 };
 
 class Que extends Component {
 
-    state = {
-        error: false,
-        que: [],
-        entities: []
-    };
+  state = {
+    error: false,
+    que: [],
+    entities: []
+  };
 
-    async componentDidMount() {
-        const {ethereum, web3} = window;
+  async componentDidMount() {
+    const {ethereum, web3} = window;
 
-        if (ethereum && web3) {
-            const capTableQue = await RegistryOfCapTablesQue.init(ethereum);
-            const que = await capTableQue.que();
-            const entityPromises = que.map(q => {
-                return getEntity(q.uuid);
-            });
+    if (ethereum && web3) {
+      const capTableQue = await RegistryOfCapTablesQue.init(ethereum);
+      const que = await capTableQue.que();
+      const entityPromises = que.map(q => {
+        return getEntity(q.uuid);
+      });
 
-            const entities = await Promise.all(entityPromises);
+      const entities = await Promise.all(entityPromises);
 
-            this.setState({
-                ...this.state,
-                que,
-                entities
-            });
-        } else {
-            this.setState({
-                ...this.state,
-                error: true,
-            });
-        }
+      this.setState({
+        ...this.state,
+        que,
+        entities
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        error: true,
+      });
+    }
+  }
+
+  render() {
+    const {que, error, entities} = this.state;
+
+    if (error) {
+      return <div>Error</div>
     }
 
-    render() {
-        const {que, error, entities} = this.state;
+    return (
+      <div>
+        <h1>Kø for Aksjeeierbøker</h1>
 
-        if (error) {
-            return <div>Error</div>
-        }
+        <div className="que">
+          {
+            que.map((capTable, i) => {
+              const entity = entities[i];
 
-        return (
-            <div>
-                <h1>Kø for Aksjeeierbøker</h1>
-
-                <div className="que">
-                    {
-                        que.map((capTable, i) => {
-                            const entity = entities[i];
-
-                            return (
-                                <div key={i} className="que__entry">
-                                    <Card>
-                                        <CardHeader title={capTable.name}></CardHeader>
-                                        <CardContent>
-                                            {
-                                                entity
-                                                    ? (
-                                                        <Entity entity={entity} capTable={capTable}/>
-                                                    )
-                                                    : ('Kunne ikke finne enhet i enhetsregisteret')
-                                            }
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button variant="contained" color="secondary">Avslå</Button>
-                                            <Button variant="contained" color="primary">Godkjenn</Button>
-                                        </CardActions>
-                                    </Card>
-                                </div>
-                            )
-                        })
-                    }
+              return (
+                <div key={i} className="que__entry">
+                  <Card>
+                    <CardHeader title={capTable.name}></CardHeader>
+                    <CardContent>
+                      {
+                        entity
+                          ? (
+                            <Entity entity={entity} capTable={capTable}/>
+                          )
+                          : ('Kunne ikke finne enhet i enhetsregisteret')
+                      }
+                    </CardContent>
+                    <CardActions>
+                      <Button variant="contained" color="secondary">Avslå</Button>
+                      <Button variant="contained" color="primary">Godkjenn</Button>
+                    </CardActions>
+                  </Card>
                 </div>
-            </div>
-        );
-    }
+              )
+            })
+          }
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Que;
