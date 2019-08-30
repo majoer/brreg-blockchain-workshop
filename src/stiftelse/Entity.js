@@ -19,7 +19,7 @@ class Entity extends Component {
       streetAddress: enhet.adresse
     });
 
-    await entityTx;
+    await entityTx.wait();
 
     this.props.history.push('/stiftelse/capTable', {address});
   }

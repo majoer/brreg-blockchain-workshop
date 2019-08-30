@@ -10,7 +10,7 @@ class CapTable extends Component {
     const {address} = this.props.location.state;
 
     const capTableTx = await capTables.add(address);
-    await capTableTx;
+    await capTableTx.wait();
 
     this.props.history.push('/stiftelse/complete');
   }
