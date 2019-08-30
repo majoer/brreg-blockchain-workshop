@@ -6,6 +6,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import {Entity} from "./Entity";
 import './Que.css';
+import {RegistryOfCapTablesQue} from "@brreg/sdk";
 
 const getEntity = async (orgnummer) => {
   return fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${orgnummer}`)
@@ -31,7 +32,7 @@ class Que extends Component {
   };
 
   async componentDidMount() {
-    const {capTableQue} = this.props;
+    const capTableQue = await RegistryOfCapTablesQue.init(window.ethereum);
 
     const que = await capTableQue.que();
     const entityPromises = que.map(q => {

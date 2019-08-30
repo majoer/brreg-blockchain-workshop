@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 
 export class Stiftelse extends Component {
 
-   state = {
+  state = {
     selskapsnavn: '',
 
     navn: '',
@@ -16,12 +16,7 @@ export class Stiftelse extends Component {
     aksjekapital: '',
     paalydende: '',
     antallAksjer: '',
-  }; 
-
-  myTestPrint(property) {
-    console.log("THIS IS A CHAIR!!!")
-    return property;
-  }
+  };
 
   async onClickSendInn() {
     const {selskapsnavn} = this.state;
@@ -30,22 +25,9 @@ export class Stiftelse extends Component {
       return;
     }
 
-    //setStiftelseDokumentState(this.state)
-    const {stockFactory, entityRegistry, capTables} = this.props;
-
-    console.log("THIS IS ALSO A CHAIR!!!");
-
-    this.props.history.push({
-      pathname: '/stiftelse/samordnet', 
-      state: {
-        stiftelsesdokument:this.state,
-        stockFactory,
-        entityRegistry,
-        capTables 
-      }});
-
-    /*const rootUrl = window.location.origin;
-    window.location.href=rootUrl + '/stiftelse/samordnet'; /**/
+    this.props.history.push('/stiftelse/samordnet', {
+      stiftelsesDokument: this.state
+    });
   }
 
   onChange(e, field) {

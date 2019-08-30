@@ -3,7 +3,7 @@ import pad from 'pad';
 
 class Samordnet extends Component {
 
-	samordnetRegistermelding(stiftelsesDokument) {
+  samordnetRegistermelding(stiftelsesDokument) {
 
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -17,23 +17,17 @@ class Samordnet extends Component {
     })
   }
 
-	async componentDidMount() {
+  async componentDidMount() {
 
-      const {stiftelsesDokument, stockFactory, entityRegistry, capTables} 
-        = this.props.locattion.state;
+    const {stiftelsesDokument} = this.props.location.state;
 
-    	const enhet = await this.samordnetRegistermelding(stiftelsesDokument);
-    	//this.props.setEnhetState(enhet);
+    const enhet = await this.samordnetRegistermelding(stiftelsesDokument);
 
-      this.props.history.push({
-        pathname: '/stiftelse/entity', 
-        state:{
-          enhet, 
-          stockFactory, 
-          entityRegistry, 
-          capTables}
-        });
-	}
+    this.props.history.push('/stiftelse/company', {
+        enhet
+      }
+    );
+  }
 
   render() {
     return (
