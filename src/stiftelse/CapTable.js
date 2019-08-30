@@ -1,7 +1,12 @@
 import React, {Component} from 'react';
 import {RegistryOfCapTables} from "@brreg/sdk";
+import {Redirect} from 'react-router-dom';
 
 class CapTable extends Component {
+
+  state = {
+    done: false
+  };
 
   async componentDidMount() {
 
@@ -12,10 +17,18 @@ class CapTable extends Component {
     const capTableTx = await capTables.add(address);
     await capTableTx.wait();
 
-    this.props.history.push('/stiftelse/complete');
+    this.setState({
+      ...this.state,
+      done: true
+    });
   }
 
   render() {
+
+    if (this.state.done) {
+      return <Redirect to="/stiftelse/complete"/>
+    }
+
     return (
       <div>Setter inn Aksjeeierbok i blockchain</div>
     )

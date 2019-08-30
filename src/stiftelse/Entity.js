@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import {EntityRegistry, RegistryOfCapTables, RegistryOfCapTablesQue, StockFactory} from "@brreg/sdk";
+import {Redirect} from "react-router-dom";
 
 class Entity extends Component {
+
+  state = {
+    done: false,
+    address: undefined
+  };
 
   async componentDidMount() {
     const {ethereum} = window;
@@ -21,11 +27,24 @@ class Entity extends Component {
 
     await entityTx.wait();
 
-    this.props.history.push('/stiftelse/capTable', {address});
+    this.setState({
+      ...this.state,
+      address,
+      done: true
+    });
   }
 
 
   render() {
+    const {done, address} = this.state;
+    const state = {
+      address
+    };
+
+    if (done) {
+      return <Redirect to={{pathname: "/stiftelse/capTable", state}}/>
+    }
+
     return (
       <div>Setter inn enhet i blockchain</div>
     )

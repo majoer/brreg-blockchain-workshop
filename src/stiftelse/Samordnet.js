@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import pad from 'pad';
+import {Redirect} from "react-router-dom";
 
 class Samordnet extends Component {
+
+  state = {
+    done: false,
+    enhet: undefined
+  };
 
   samordnetRegistermelding(stiftelsesDokument) {
 
@@ -23,13 +29,24 @@ class Samordnet extends Component {
 
     const enhet = await this.samordnetRegistermelding(stiftelsesDokument);
 
-    this.props.history.push('/stiftelse/company', {
-        enhet
-      }
-    );
+    this.setState({
+      ...this.state,
+      done: true,
+      enhet: enhet
+    });
   }
 
   render() {
+
+    const {done, enhet} = this.state;
+    const state = {
+      enhet
+    };
+
+    if (done) {
+      return <Redirect to={{pathname: '/stiftelse/company', state}}/>
+    }
+
     return (
       <div>Oppretter enhet via. samordnet registermelding</div>
     )
