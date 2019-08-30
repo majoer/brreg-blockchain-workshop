@@ -18,10 +18,21 @@ class Samordnet extends Component {
   }
 
 	async componentDidMount() {
-    	const enhet = await this.samordnetRegistermelding(this.props.stiftelsesDokument);
-    	this.props.setEnhetState(enhet);
 
-      this.props.history.push('/stiftelse/entity');
+      const {stiftelsesDokument, stockFactory, entityRegistry, capTables} 
+        = this.props.locattion.state;
+
+    	const enhet = await this.samordnetRegistermelding(stiftelsesDokument);
+    	//this.props.setEnhetState(enhet);
+
+      this.props.history.push({
+        pathname: '/stiftelse/entity', 
+        state:{
+          enhet, 
+          stockFactory, 
+          entityRegistry, 
+          capTables}
+        });
 	}
 
   render() {

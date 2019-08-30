@@ -18,17 +18,31 @@ export class Stiftelse extends Component {
     antallAksjer: '',
   }; 
 
+  myTestPrint(property) {
+    console.log("THIS IS A CHAIR!!!")
+    return property;
+  }
+
   async onClickSendInn() {
-    const {setStiftelseDokumentState} = this.props;
     const {selskapsnavn} = this.state;
 
     if (!selskapsnavn) {
       return;
     }
 
-    setStiftelseDokumentState(this.state)
+    //setStiftelseDokumentState(this.state)
+    const {stockFactory, entityRegistry, capTables} = this.props;
 
-    this.props.history.push('/stiftelse/samordnet');
+    console.log("THIS IS ALSO A CHAIR!!!");
+
+    this.props.history.push({
+      pathname: '/stiftelse/samordnet', 
+      state: {
+        stiftelsesdokument:this.state,
+        stockFactory,
+        entityRegistry,
+        capTables 
+      }});
 
     /*const rootUrl = window.location.origin;
     window.location.href=rootUrl + '/stiftelse/samordnet'; /**/

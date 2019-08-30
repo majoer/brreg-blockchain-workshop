@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 class Entity extends Component {
 
 	async componentDidMount() {
-		const {enhet, stockFactory, entityRegistry, setAddressState} = this.props;
+		const {enhet, stockFactory, entityRegistry, capTables} = this.props.location.state;
 
 		console.log('1 - Starbase, where no turtle has gone before...');
 		console.log(enhet);
@@ -28,9 +28,9 @@ class Entity extends Component {
     	await entityTx;
 
     	console.log('5 - Neon nightriders')
-	    setAddressState(address);
+	    //setAddressState(address);
 	    
-      	this.props.history.push('/stiftelse/capTable');
+      	this.props.history.push({pathname: '/stiftelse/capTable', state: {address, capTables}});
 	}
 
 

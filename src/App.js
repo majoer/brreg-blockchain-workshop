@@ -63,7 +63,7 @@ class App extends Component {
   }
 
   render() {
-    const {stiftelsesDokument, enhet, address, error, capTableQue, capTables, entityRegistry, stockFactory, initializing} = this.state;
+    const {error, capTableQue, capTables, entityRegistry, stockFactory, initializing} = this.state;
 
     if (error) {
       return <div>Error while initializing</div>
@@ -79,21 +79,17 @@ class App extends Component {
           <Route path="/" exact component={() => <div>Nothing here</div>}/>
           <Route path="/que" component={() => <Que capTableQue={capTableQue}/>}/>
           <Route path="/stiftelse" exact component={(props) => <Stiftelse
-                                                                {...props}
-                                                               setStiftelseDokumentState={(stiftelsesDokument) => this.setStiftelseDokumentState(stiftelsesDokument)}/>}/>
-          <Route path="/stiftelse/entity" component={(props) => <Entity enhet = {enhet}
-                                                                {...props}
-                                                               stockFactory={stockFactory}
-                                                               entityRegistry={entityRegistry}
-                                                               setAddressState={(address) => this.setAddressState(address)}/>} />
-          <Route path="/stiftelse/address" component={() => <Address/>} />
-          <Route path="/stiftelse/capTable" component={(props) => <CapTable address={address}
-                                                                {...props}
-                                                                 capTables={capTables}/>} />
-          <Route path="/stiftelse/samordnet" component={(props) => <Samordnet stiftelsesDokument={stiftelsesDokument}
-                                                                {...props}
-                                                                          setEnhetState={(enhet) => this.setEnhetState(enhet)}/>} />
-          <Route path="/stiftelse/complete" component={() => <Complete/>} />
+                                                              {...props} 
+                                                              stockFactory={stockFactory}
+                                                               entityRegistry={entityRegistry} 
+                                                               capTables={capTables}/>} />
+          <Route path="/stiftelse/entity" component={Entity}
+                                                               
+                                                               />
+          <Route path="/stiftelse/address" component={Address} />
+          <Route path="/stiftelse/capTable" component={CapTable}  /> 
+          <Route path="/stiftelse/samordnet" component={Samordnet} />
+          <Route path="/stiftelse/complete" component={Complete} />
         
         </Router>
       </div>
