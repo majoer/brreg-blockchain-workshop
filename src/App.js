@@ -2,8 +2,12 @@ import React, {Component} from 'react';
 import './App.css'
 import Que from './Que';
 import {RegistryOfCapTablesQue, RegistryOfCapTables, StockFactory, EntityRegistry} from "@brreg/sdk";
-import {Stiftelse} from "./Stiftelse";
+import {Stiftelse} from "./stiftelse/Stiftelse";
 import {Route, BrowserRouter as Router} from "react-router-dom";
+import Address from "./stiftelse/Address";
+import CapTable from "./stiftelse/CapTable";
+import Samordnet from "./stiftelse/Samordnet";
+import Complete from "./stiftelse/Complete";
 
 class App extends Component {
 
@@ -57,9 +61,13 @@ class App extends Component {
         <Router>
           <Route path="/" exact component={() => <div>Nothing here</div>}/>
           <Route path="/que" component={() => <Que capTableQue={capTableQue}/>}/>
-          <Route path="/stiftelse" component={() => <Stiftelse capTables={capTables}
+          <Route path="/stiftelse" exact component={() => <Stiftelse capTables={capTables}
                                                                stockFactory={stockFactory}
                                                                entityRegistry={entityRegistry}/>}/>
+          <Route path="/stiftelse/address" component={() => <Address/>} />
+          <Route path="/stiftelse/capTable" component={() => <CapTable/>} />
+          <Route path="/stiftelse/samordnet" component={() => <Samordnet/>} />
+          <Route path="/stiftelse/complete" component={() => <Complete/>} />
         </Router>
       </div>
     );
