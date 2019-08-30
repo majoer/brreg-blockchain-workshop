@@ -1,11 +1,10 @@
 import React, {Component} from "react";
 import {TextField} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import pad from 'pad';
 
 export class Stiftelse extends Component {
 
-  state = {
+   state = {
     selskapsnavn: '',
 
     navn: '',
@@ -17,76 +16,22 @@ export class Stiftelse extends Component {
     aksjekapital: '',
     paalydende: '',
     antallAksjer: '',
-    waitingForSamordnet: false,
-    complete: false
-  };
-
-  samordnetRegistermelding(stiftelsesDokument) {
-    this.setState({
-      ...this.state,
-      waitingForSamordnet: true
-    });
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const organisasjonsnummer = pad(9, Math.round(Math.random() * 999999999), '0');
-
-        this.setState({
-          ...this.state,
-          waitingForSamordnet: false
-        });
-
-        resolve({
-          ...stiftelsesDokument,
-          organisasjonsnummer
-        });
-      }, 5000);
-    })
-  }
+  }; 
 
   async onClickSendInn() {
-    const {stockFactory, capTables, entityRegistry} = this.props;
-    const {selskapsnavn, navn, adresse, postkode, by, land, aksjekapital, paalydende, antallAksjer} = this.state;
+    const {setStiftelseDokumentState} = this.props;
+    const {selskapsnavn} = this.state;
 
     if (!selskapsnavn) {
       return;
     }
 
-    const enhet = await this.samordnetRegistermelding({
-      selskapsnavn,
-      navn,
-      adresse,
-      aksjekapital,
-      paalydende,
-      antallAksjer,
-      postkode,
-      by,
-      land
-    });
+    setStiftelseDokumentState(this.state)
 
-    const Company = await stockFactory.createNew(enhet.selskapsnavn, enhet.organisasjonsnummer);
-    const address = await Company.getAddress();
-    const entityTx = await entityRegistry.addEntity({
-      address,
-      uuid: enhet.organisasjonsnummer,
-      type: 'organization',
-      name: enhet.selskapsnavn,
-      country: enhet.land,
-      city: enhet.by,
-      postalcode: enhet.postkode,
-      streetAddress: enhet.adresse
-    });
+    this.props.history.push('/stiftelse/samordnet');
 
-    await entityTx;
-
-    const capTableTx = await capTables.add(address);
-
-    await capTableTx;
-
-    this.setState({
-      ...this.state,
-      complete: true
-    });
+    /*const rootUrl = window.location.origin;
+    window.location.href=rootUrl + '/stiftelse/samordnet'; /**/
   }
 
   onChange(e, field) {

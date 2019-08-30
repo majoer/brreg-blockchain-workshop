@@ -8,16 +8,33 @@ import Address from "./stiftelse/Address";
 import CapTable from "./stiftelse/CapTable";
 import Samordnet from "./stiftelse/Samordnet";
 import Complete from "./stiftelse/Complete";
+import Entity from './stiftelse/Entity';
 
 class App extends Component {
 
   state = {
+    stiftelsesDokument: undefined,
+    enhet: undefined,
+    address: undefined,
+
     error: false,
     initializing: true,
     capTableQue: undefined,
     capTable: undefined,
     stockFactory: undefined
   };
+
+  setStiftelseDokumentState(stiftelsesDokument) {
+    this.setState({...this.state, stiftelsesDokument});
+  }
+
+  setEnhetState(enhet) {
+    this.setState({...this.state, enhet});
+  }
+
+  setAddressState(address) {
+    this.setState({...this.state, address});
+  }
 
   async componentDidMount() {
     const {ethereum, web3} = window;
@@ -46,7 +63,7 @@ class App extends Component {
   }
 
   render() {
-    const {error, capTableQue, capTables, entityRegistry, stockFactory, initializing} = this.state;
+    const {stiftelsesDokument, enhet, address, error, capTableQue, capTables, entityRegistry, stockFactory, initializing} = this.state;
 
     if (error) {
       return <div>Error while initializing</div>
@@ -61,13 +78,23 @@ class App extends Component {
         <Router>
           <Route path="/" exact component={() => <div>Nothing here</div>}/>
           <Route path="/que" component={() => <Que capTableQue={capTableQue}/>}/>
-          <Route path="/stiftelse" exact component={() => <Stiftelse capTables={capTables}
+          <Route path="/stiftelse" exact component={(props) => <Stiftelse
+                                                                {...props}
+                                                               setStiftelseDokumentState={(stiftelsesDokument) => this.setStiftelseDokumentState(stiftelsesDokument)}/>}/>
+          <Route path="/stiftelse/entity" component={(props) => <Entity enhet = {enhet}
+                                                                {...props}
                                                                stockFactory={stockFactory}
-                                                               entityRegistry={entityRegistry}/>}/>
+                                                               entityRegistry={entityRegistry}
+                                                               setAddressState={(address) => this.setAddressState(address)}/>} />
           <Route path="/stiftelse/address" component={() => <Address/>} />
-          <Route path="/stiftelse/capTable" component={() => <CapTable/>} />
-          <Route path="/stiftelse/samordnet" component={() => <Samordnet/>} />
+          <Route path="/stiftelse/capTable" component={(props) => <CapTable address={address}
+                                                                {...props}
+                                                                 capTables={capTables}/>} />
+          <Route path="/stiftelse/samordnet" component={(props) => <Samordnet stiftelsesDokument={stiftelsesDokument}
+                                                                {...props}
+                                                                          setEnhetState={(enhet) => this.setEnhetState(enhet)}/>} />
           <Route path="/stiftelse/complete" component={() => <Complete/>} />
+        
         </Router>
       </div>
     );
